@@ -16,6 +16,8 @@ struct CartesianState {
 
     Eigen::Vector3d v;
     Eigen::Vector3d w;
+
+    friend std::ostream& operator<<(std::ostream& os, const CartesianState& state);
 };
 
 } // namespace cartesian_controllers

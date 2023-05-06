@@ -28,4 +28,13 @@ CartesianState::CartesianState(
                         point.twist.angular.z);
 }
 
+std::ostream& operator<<(std::ostream& out, const CartesianState& state)
+{
+  out << "p:\n" << state.p << '\n';
+  out << "q:\n" << state.q.coeffs() << '\n';
+  out << "v:\n" << state.v << '\n';
+  out << "w:\n" << state.w << '\n';
+  return out;
+}
+
 } // namespace cartesian_controllers
