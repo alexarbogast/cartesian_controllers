@@ -46,7 +46,7 @@ public:
     void update(const ros::Time&, const ros::Duration& period) override;
     void starting(const ros::Time&) override;
     void stopping(const ros::Time&) override;
-}
+};
 
 } // namespace controller_namespace
 ```
