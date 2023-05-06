@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>cartesian_trajectory_adapter</name>
+  <version>0.1.0</version>
+  <description> cartesian_trajectory_controllers provides online cartesian 
+  trajectory execution using actionlibs </description>
+  <author email="arbogastaw@gmail.com">Alex Arbogast</author>
+  <maintainer email="arbogastaw@gmail.com">Alex Arbogast</maintainer>
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <depend>controller_manager</depend>
+  <depend>hardware_interface</depend>
+  <depend>pluginlib</depend>
+  <depend>actionlib</depend>
+  <depend>roscpp</depend>
+  <depend>cartesian_trajectory</depend>
+  <depend>cartesian_control_msgs</depend>
+  <depend>trajectory_generation</depend>
+  
+</package>
