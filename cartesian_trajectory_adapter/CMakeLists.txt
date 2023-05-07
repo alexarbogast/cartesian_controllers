@@ -32,6 +32,7 @@ catkin_package(
 include_directories(include)
 include_directories(SYSTEM ${catkin_INCLUDE_DIRS})
 
-add_library(${PROJECT_NAME} src/cartesian_trajectory_adapter.cpp)
+add_library(${PROJECT_NAME} src/cartesian_trajectory_adapter.cpp
+							src/multi_trajectory_adapter.cpp)
 target_link_libraries(${PROJECT_NAME} ${catkin_LIBRARIES})
 add_dependencies(${PROJECT_NAME} ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})

@@ -46,6 +46,9 @@ public:
     void update(const ros::Time&, const ros::Duration& period) override;
     void starting(const ros::Time&) override;
     void stopping(const ros::Time&) override;
+
+private:
+    cartesian_controllers::CartesianState setpoint_;
 };
 
 } // namespace controller_namespace
@@ -55,7 +58,7 @@ The controller should initialize the adapter at startup.
 ```C++
 bool CartesianTrajectoryController::init(hardware_interface::RobotHW* robot_hw,
                                          ros::NodeHandle& node_handle) {
-    TrajectoryAdapter::init(node_handle);
+    TrajectoryAdapter::init(node_handle, &setpoint_);
 }
 ```
 
@@ -79,3 +82,5 @@ void CartesianTrajectoryController::update(const ros::Time& /*time*/, const ros:
     }
 }
 ```
+## MultiTrajectoryAdapter
+The multi-trajectory adapter provides a similar interface for controllers that might need more than one trajectory generator (i.e. multi-robot controllers).  

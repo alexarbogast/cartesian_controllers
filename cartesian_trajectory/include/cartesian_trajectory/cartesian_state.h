@@ -11,6 +11,8 @@ struct CartesianState {
     CartesianState();
     CartesianState(const cartesian_control_msgs::CartesianTrajectoryPoint point);
 
+    cartesian_control_msgs::CartesianTrajectoryPoint toMsg() const;
+
     Eigen::Vector3d p;
     Eigen::Quaterniond q;
 
