@@ -7,14 +7,17 @@
 #include <trajectory_generation/trajectory_generator.h>
 
 
+#define LOCK_ADAPTER_DATA() std::lock_guard<std::mutex> lock_setpoint(adapter_lock_)
+
 namespace cartesian_trajectory_controllers {
-using StateHandle = const cartesian_controllers::CartesianState*;
 
 class CartesianTrajectoryAdapter {
 public:
     CartesianTrajectoryAdapter() = default;
 
-    bool init(ros::NodeHandle& controller_nh, const StateHandle state_handle);
+    using StateCallback = boost::function<void(cartesian_controllers::CartesianState&)>;
+    bool init(ros::NodeHandle& controller_nh, 
+              const StateCallback& callback);
     void executeCB(const cartesian_control_msgs::TrajectoryExecutionGoalConstPtr& goal);
     void preemptCB();
 
@@ -26,11 +29,12 @@ public:
 
     bool sample(double delta_t, cartesian_controllers::CartesianState& state);
 
+    std::mutex adapter_lock_;
 protected:
     std::unique_ptr<cartesian_trajectory_generation::TrajectoryGenerator> gen_;
 
+    StateCallback state_callback_;
     TrajectoryServer action_server_;
-    StateHandle state_handle_;
     std::atomic<bool> done_;
 };
 

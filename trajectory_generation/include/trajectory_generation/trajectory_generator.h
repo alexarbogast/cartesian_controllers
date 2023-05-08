@@ -16,7 +16,6 @@ public:
     virtual bool reset() = 0;
 
     cartesian_controllers::CartesianTrajectory trajectory_;
-    std::mutex traj_lock_;
 
     using SegmentIterator = std::vector<cartesian_controllers::CartesianTrajectorySegment>::iterator;
     SegmentIterator current_segment_;

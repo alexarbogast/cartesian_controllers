@@ -4,10 +4,9 @@
 namespace cartesian_trajectory_controllers {
 
 bool CartesianTrajectoryAdapter::init(ros::NodeHandle& controller_nh,
-                                      const StateHandle state_handle) {
+                                      const StateCallback& callback) {
     done_ = true;
-    state_handle_ = state_handle;
-
+    state_callback_ = callback;
     gen_.reset(new cartesian_trajectory_generation::RuckigTrajectoryGenerator());
     action_server_.reset(new actionlib::SimpleActionServer<
                              cartesian_control_msgs::TrajectoryExecutionAction>(
@@ -21,8 +20,8 @@ bool CartesianTrajectoryAdapter::init(ros::NodeHandle& controller_nh,
 }
 
 bool CartesianTrajectoryAdapter::sample(double delta_t, 
-        cartesian_controllers::CartesianState& state) {
-    std::lock_guard<std::mutex> lock_trajectory(gen_->traj_lock_);
+                                        cartesian_controllers::CartesianState& state) {
+    LOCK_ADAPTER_DATA();
     this->done_ = gen_->sample(delta_t, state);
     return done_;
 }
@@ -31,11 +30,13 @@ void CartesianTrajectoryAdapter::executeCB(
         const cartesian_control_msgs::TrajectoryExecutionGoalConstPtr& goal) {
     cartesian_control_msgs::TrajectoryExecutionResult result;
     {
-        std::lock_guard<std::mutex> lock_trajectory(gen_->traj_lock_);
+        LOCK_ADAPTER_DATA();
         cartesian_control_msgs::CartesianTrajectory traj = goal->trajectory;
 
-        auto current_state = this->state_handle_->toMsg();
-        traj.points.insert(traj.points.begin(), this->state_handle_->toMsg());
+        // add current state as first trajectory point
+        cartesian_controllers::CartesianState current_state;
+        this->state_callback_(current_state);
+        traj.points.insert(traj.points.begin(), current_state.toMsg());
 
         if (!gen_->trajectory_.init(traj, goal->limits)) {
             ROS_ERROR("Trajectory Adapter: Invalid trajectory");
